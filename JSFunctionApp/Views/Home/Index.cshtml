@@ -1,0 +1,69 @@
+﻿@{
+    ViewData["Title"] = "JS Function Page";
+}
+
+<h1>JS Function</h1>
+
+<form id="calculatorForm">
+    <label for="paramA">Param A:</label>
+    <select id="paramA" name="paramA">
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+    </select>
+    <br />
+    <label for="paramB">Param B:</label>
+    <select id="paramB" name="paramB">
+        <option value="A">A</option>
+        <option value="B">B</option>
+        <option value="C">C</option>
+        <option value="D">D</option>
+        <option value="E">E</option>
+    </select>
+    <br />
+    <label for="paramC">Param C:</label>
+    <input type="number" id="paramC" name="paramC" min="0" max="1" />
+    <br />
+    <label for="paramD">Param D:</label>
+    <input type="number" id="paramD" name="paramD" min="0" max="1" />
+    <br />
+    <label for="paramE">Param E:</label>
+    <input type="number" id="paramE" name="paramE" min="0" max="1" />
+    <br />
+    <button type="button" id="calculateButton">Calculate</button>
+</form>
+
+<div id="result"></div>
+
+<script>document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("calculateButton").addEventListener("click", function () {
+            var paramA = document.getElementById("paramA").value;
+            var paramB = document.getElementById("paramB").value;
+            var paramC = parseInt(document.getElementById("paramC").value);
+            var paramD = parseInt(document.getElementById("paramD").value);
+            var paramE = parseInt(document.getElementById("paramE").value);
+
+            fetch("/Home/Calculate", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ paramA, paramB, paramC, paramD, paramE }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        document.getElementById("result").innerText = "Expected Value: " + data.result;
+                    } else {
+                        document.getElementById("result").innerText = "Error: " + data.error;
+                    }
+                })
+                .catch(error => {
+                    console.error("Error:", error);
+                    document.getElementById("result").innerText = "An error occurred.";
+                });
+        });
+    });</script>
+
